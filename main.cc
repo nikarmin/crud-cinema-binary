@@ -58,7 +58,7 @@ int main() {
 	// fin.open(FILE_NAME);
 
   // // verifica se ele existe
-  // if (!fin.is_open()) 
+  // if (!fin.is_open())
 	// {
 	// 	cout << "O arquivo >" << FILE_NAME << "< nao foi encontrado!\n";
 	// 	exit(0);
@@ -96,6 +96,26 @@ int main() {
       break;
     }
   }
+
+  public:
+ 	int Adicionar(Cinema *p,int c)
+	{
+	 cout<<"Digite o NOME do cinema: ";
+	cin>>p[c].nome;
+	cout<<"Digite o SHOPPING que fica o cinema: ";
+	cin>> p[c].shopping;
+	cout<< "Digite a SALA: ";
+	cin>> p[c].sala;
+	cout<<"\nREGISTRO INSERIDO...\n";
+	c++;
+	return c;
+	}
+
+
+
+
+    }
+
 
   exit(1);
 }

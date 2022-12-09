@@ -26,11 +26,9 @@ int main(){
             break;
             case 2:
 				readAll ();
-				cout<<"\n";
             break;
             case 3:
 				post ();
-				cout<<"\n";
             break;
             case 4:
 				deleteOne();

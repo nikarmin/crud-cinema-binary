@@ -1,6 +1,7 @@
 #include <iostream>
-#include <string.h>
+#include <string>
 #include <fstream>
+#include <cctype>
 #include "cinema.h"
 using namespace std;
 
@@ -36,6 +37,9 @@ void menu()
 
 		switch (opcao)
 		{
+		default:
+			cout << "\nDigite corretamente uma opcao!\n";
+			break;
 		case 1:
 			readOne();
 			break;
@@ -69,20 +73,28 @@ void update()
 	cin >> id;
 
 	fseek(arquivo, id * sizeof(Cinema), SEEK_SET);
-	// cout << "Digite o [ID] do cinema: ";
-	// cin >> cinema.id;
-	// cin.ignore();
 	cout << "Digite o [NOME] do [CINEMA]: ";
 	getline(cin, nome);
 	strcpy(cinema.nome, nome.c_str());
+
 	cout << "Digite o [NOME] do [SHOPPING]: ";
 	getline(cin, shopping);
 	strcpy(cinema.shopping, shopping.c_str());
+	
 	cout << "Digite a [SALA] do cinema: ";
 	cin >> cinema.qtsSalas;
+
 	cin.ignore();
 
-	fwrite(&cinema, sizeof(Cinema), 1, arquivo);
+	if (nome.length() < 15 && shopping.length() < 30)
+	{
+		fwrite(&cinema, sizeof(Cinema), 1, arquivo);
+	}
+	else
+	{
+		cout << "\n>> DIGITE CORRETAMENTE NOS PADROES! <<\n";
+	}
+
 	fclose(arquivo);
 	readAll();
 }
@@ -94,25 +106,34 @@ void post()
 	FILE *arquivo = fopen(arq, "ab");
 	Cinema cinema;
 	string nome, sala, shopping;
+	char id;
 
 	do
 	{
 		system("clear||cls");
 		fflush(stdin);
-		// cout << "\nDigite o [ID]: ";
-		// cin >> cinema.id;
-		// cin.ignore();
+
 		cout << "Digite o [NOME] do [CINEMA]: ";
 		getline(cin, nome);
-		strcpy(cinema.nome, nome.c_str());
+		strcpy(cinema.getNome(), nome.c_str());
+
 		cout << "Digite o [NOME] do [SHOPPING]: ";
 		getline(cin, shopping);
 		strcpy(cinema.shopping, shopping.c_str());
+
 		cout << "Digite a [SALA]: ";
 		cin >> cinema.qtsSalas;
+
 		cin.ignore();
 
-		fwrite(&cinema, sizeof(Cinema), 1, arquivo);
+		if (nome.length() < 15 && shopping.length() < 30)
+		{
+			fwrite(&cinema, sizeof(Cinema), 1, arquivo);
+		}
+		else
+		{
+			cout << "\n>> DIGITE CORRETAMENTE NOS PADROES! <<\n";
+		}
 
 		cout << "\nDeseja continuar adicionando? (S/N): ";
 		cin >> continuar;
@@ -130,19 +151,22 @@ void readOne()
 		arquivo = fopen(arq, "w+b");
 	}
 
-	int id = 0;
+	int id;
 	Cinema cinema;
 	cout << "\nColoque o [ID] do cinema que queira ler: ";
 	cin >> id;
 
-	//if (isdigit(id)){
-		fseek(arquivo, id * sizeof(Cinema), SEEK_SET);
-		fread(&cinema, sizeof(Cinema), 1, arquivo);
-		cout << "\n";
-		cout << "[CINEMA ENCONTRADO] :." << id /*<< " " << cinema.id*/ << " " << cinema.nome << " " << cinema.shopping << " " << cinema.qtsSalas << endl;
+	// char oi = id;
+
+	// if (isalnum(oi))
+	//{
+	fseek(arquivo, id * sizeof(Cinema), SEEK_SET);
+	fread(&cinema, sizeof(Cinema), 1, arquivo);
+	cout << "\n";
+	cout << "[CINEMA ENCONTRADO] :.    " << id /*<< " " << cinema.id*/ << " " << cinema.nome << " " << cinema.shopping << " " << cinema.qtsSalas << endl;
 	// }
 	// else{
-	// 	cout << "IIIIIIIIIIIIIh";
+	// 	cout << "\nIIIIIIIIIIIIIh\n";
 	// }
 
 	fclose(arquivo);
@@ -172,9 +196,9 @@ void readAll()
 		 << endl;
 	do
 	{
-		//if (cinema.qtsSalas != -1)
+		// if (cinema.qtsSalas != -1)
 		//{
-			cout << id /*<<" "<<cinema.id*/ << " " << cinema.nome << " " << cinema.shopping << " " << cinema.qtsSalas << endl;
+		cout << id /*<<" "<<cinema.id*/ << " " << cinema.nome << " " << cinema.shopping << " " << cinema.qtsSalas << endl;
 		//}
 		fread(&cinema, sizeof(Cinema), 1, arquivo);
 		id += 1;
@@ -188,23 +212,23 @@ void deleteOne()
 	iffile.open("cinemas.dat", ios::binary | ios::in);
 	offile.open("temp.dat", ios::binary | ios::out);
 
-	if(!offile || !offile)
+	if (!offile || !offile)
 	{
 		cout << "O arquivo nao pode ser aberto!";
 	}
-	else 
+	else
 	{
 		int id, linha;
 		Cinema cinema;
 		cout << "Coloque o [ID] do cinema que queira deletar: ";
-		cin >> id; 
+		cin >> id;
 		linha = 0;
 
-		while(iffile.read((char*)&cinema, sizeof(cinema)))
+		while (iffile.read((char *)&cinema, sizeof(cinema)))
 		{
-			if(id != linha)
+			if (id != linha)
 			{
-				offile.write((char*)&cinema, sizeof(cinema));
+				offile.write((char *)&cinema, sizeof(cinema));
 			}
 			linha += 1;
 		}
@@ -216,7 +240,6 @@ void deleteOne()
 
 	// FILE *arquivo = fopen(arq, "r+b");
 	// readAll();
-	
 
 	// if (!arquivo)
 	// {

@@ -17,50 +17,50 @@ void update();
 void deleteOne();
 void readOne();
 
-void menu()
-{
-	int opcao;
+// void menu()
+// {
+// 	int opcao;
 
-	do
-	{
-		system("clear||cls");
-		std::cout << "=-=-=- C.R.U.D DE CINEMAS =-=-=-\n\n";
-		std::cout << "[1] - Exibir um cinema\n";
-		std::cout << "[2] - Exibir varios cinemas\n";
-		std::cout << "[3] - Adicionar um cinema\n";
-		std::cout << "[4] - Excluir um cinema\n";
-		std::cout << "[5] - Editar um cinema\n";
-		std::cout << "[0] - Sair do programa\n\n";
+// 	do
+// 	{
+// 		system("clear||cls");
+// 		std::cout << "=-=-=- C.R.U.D DE CINEMAS =-=-=-\n\n";
+// 		std::cout << "[1] - Exibir um cinema\n";
+// 		std::cout << "[2] - Exibir varios cinemas\n";
+// 		std::cout << "[3] - Adicionar um cinema\n";
+// 		std::cout << "[4] - Excluir um cinema\n";
+// 		std::cout << "[5] - Editar um cinema\n";
+// 		std::cout << "[0] - Sair do programa\n\n";
 
-		cout << "Digite uma opcao... ";
-		cin >> opcao;
+// 		cout << "Digite uma opcao... ";
+// 		cin >> opcao;
 
-		switch (opcao)
-		{
-		default:
-			cout << "\nDigite corretamente uma opcao!\n";
-			break;
-		case 1:
-			readOne();
-			break;
-		case 2:
-			readAll();
-			break;
-		case 3:
-			post();
-			break;
-		case 4:
-			deleteOne();
-			break;
-		case 5:
-			update();
-			break;
-		}
+// 		switch (opcao)
+// 		{
+// 		default:
+// 			cout << "\nDigite corretamente uma opcao!\n";
+// 			break;
+// 		case 1:
+// 			readOne();
+// 			break;
+// 		case 2:
+// 			readAll();
+// 			break;
+// 		case 3:
+// 			post();
+// 			break;
+// 		case 4:
+// 			deleteOne();
+// 			break;
+// 		case 5:
+// 			update();
+// 			break;
+// 		}
 
-		cout << "Deseja continuar? (S/N) ";
-		cin >> continuar;
-	} while (toupper(continuar) == 'S');
-}
+// 		cout << "Deseja continuar? (S/N) ";
+// 		cin >> continuar;
+// 	} while (toupper(continuar) == 'S');
+// }
 
 void update()
 {
@@ -156,20 +156,26 @@ void readOne()
 	cout << "\nColoque o [ID] do cinema que queira ler: ";
 	cin >> id;
 
-	// char oi = id;
-
-	// if (isalnum(oi))
-	//{
 	fseek(arquivo, id * sizeof(Cinema), SEEK_SET);
 	fread(&cinema, sizeof(Cinema), 1, arquivo);
 	cout << "\n";
-	cout << "[CINEMA ENCONTRADO] :.    " << id /*<< " " << cinema.id*/ << " " << cinema.nome << " " << cinema.shopping << " " << cinema.qtsSalas << endl;
-	// }
-	// else{
-	// 	cout << "\nIIIIIIIIIIIIIh\n";
-	// }
+	cout << "[CINEMA ENCONTRADO] :.    " << id << " " << cinema.nome << " " << cinema.shopping << " " << cinema.qtsSalas << endl;
 
 	fclose(arquivo);
+}
+
+int get_size(const char* file_name)
+{
+	FILE *file = fopen(file_name, "r");
+
+	if(file == NULL)
+		return 0;
+
+	fseek(file, 0, SEEK_END);
+	int size = ftell(file);
+	fclose(file);
+
+	return size;
 }
 
 void readAll()
@@ -181,13 +187,22 @@ void readAll()
 		arquivo = fopen(arq, "w+b");
 	}
 
+	if(get_size("cinemas.dat") == 0)
+	{
+		cout << "vaziozao";
+	}
+
+	else{
+		cout << "tem coiso";
+	}
+
 	int id = 0;
 	Cinema cinema;
 	system("clear||cls");
 	fread(&cinema, sizeof(Cinema), 1, arquivo);
 
 	cout << ".: Leitura de [CINEMAS] :. \n\n";
-	cout << "CODIGO" /*<<" | "<<"ID"*/ << " | "
+	cout << "CODIGO" << " | "
 		 << "NOME DO CINEMA"
 		 << " | "
 		 << "NOME DO SHOPPING"
@@ -261,4 +276,6 @@ void deleteOne()
 	// 	remove("r+b");
 	// 	rename("tempt", "r+b");
 	// }
+
 }
+

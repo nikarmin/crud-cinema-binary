@@ -1,33 +1,26 @@
+#ifndef CINEMA
+#define CINEMA
 #include <string>
-#include <cstring>
 using namespace std;
 
-// Struct do Cinema
-
-struct Cinema
-{
-    // Variáveis
-
-    int id;
+class Cinema {
+private:
+  struct Info {
     char nome[15];
     char shopping[30];
     int qtsSalas;
+  } info;
 
-    // Getters e Setters (que não servem pra nada)
+public:
+  Cinema();
+  ~Cinema();
 
-    void setId(int otherId) { id = otherId; }
-
-    void setNome(char *otherNome) { strcpy(nome, otherNome); }
-
-    void setShopping(char *otherShopping) { strcpy(shopping, otherShopping); }
-
-    void setSalas(int otherQts) { qtsSalas = otherQts; }
-
-    int getId() { return id; }
-
-    char *getNome() { return nome; }
-
-    char *getShopping() { return shopping; }
-
-    int getSala() { return qtsSalas; }
+  void setNome(std::string);
+  char *getNome();
+  void setShopping(std::string);
+  char *getShopping();
+  void setQtsSalas(int);
+  int getQtsSalas();
 };
+
+#endif

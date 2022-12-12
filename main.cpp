@@ -3,6 +3,12 @@
 #include "cinemas.h"
 using namespace std;
 
+/**
+ * @author Nicoli (21689) e Danyelle (21232)
+ * CRUD - CINEMAS
+ * Professor: Maligno
+*/
+
 int main()
 {
    char opcao;

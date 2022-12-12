@@ -2,16 +2,18 @@
 #include <cstring>
 using namespace std;
 
+// Struct do Cinema
+
 struct Cinema
 {
-    //private:
+    // Variáveis
 
     int id;
     char nome[15];
     char shopping[30];
     int qtsSalas;
 
-    //public:
+    // Getters e Setters (que não servem pra nada)
 
     void setId(int otherId) { id = otherId; }
 

@@ -10,93 +10,101 @@ const char *arq = "cinemas.dat";
 ifstream iffile;
 ofstream offile;
 
-void menu();
 void post();
 void readAll();
 void update();
 void deleteOne();
 void readOne();
 
-// void menu()
-// {
-// 	int opcao;
+int get_size(const char *file_name)
+{
+	FILE *file = fopen(file_name, "r");
 
-// 	do
-// 	{
-// 		system("clear||cls");
-// 		std::cout << "=-=-=- C.R.U.D DE CINEMAS =-=-=-\n\n";
-// 		std::cout << "[1] - Exibir um cinema\n";
-// 		std::cout << "[2] - Exibir varios cinemas\n";
-// 		std::cout << "[3] - Adicionar um cinema\n";
-// 		std::cout << "[4] - Excluir um cinema\n";
-// 		std::cout << "[5] - Editar um cinema\n";
-// 		std::cout << "[0] - Sair do programa\n\n";
+	if (file == NULL)
+		return 0;
 
-// 		cout << "Digite uma opcao... ";
-// 		cin >> opcao;
+	fseek(file, 0, SEEK_END);
+	int size = ftell(file);
+	fclose(file);
 
-// 		switch (opcao)
-// 		{
-// 		default:
-// 			cout << "\nDigite corretamente uma opcao!\n";
-// 			break;
-// 		case 1:
-// 			readOne();
-// 			break;
-// 		case 2:
-// 			readAll();
-// 			break;
-// 		case 3:
-// 			post();
-// 			break;
-// 		case 4:
-// 			deleteOne();
-// 			break;
-// 		case 5:
-// 			update();
-// 			break;
-// 		}
-
-// 		cout << "Deseja continuar? (S/N) ";
-// 		cin >> continuar;
-// 	} while (toupper(continuar) == 'S');
-// }
+	return size;
+}
 
 void update()
 {
-	FILE *arquivo = fopen(arq, "r+b");
-	int id;
-	Cinema cinema;
-	string nome, sala, shopping;
-
-	cout << "\nDigite o [ID] do cinema que queira editar:";
-	cin >> id;
-
-	fseek(arquivo, id * sizeof(Cinema), SEEK_SET);
-	cout << "Digite o [NOME] do [CINEMA]: ";
-	getline(cin, nome);
-	strcpy(cinema.nome, nome.c_str());
-
-	cout << "Digite o [NOME] do [SHOPPING]: ";
-	getline(cin, shopping);
-	strcpy(cinema.shopping, shopping.c_str());
-	
-	cout << "Digite a [SALA] do cinema: ";
-	cin >> cinema.qtsSalas;
-
-	cin.ignore();
-
-	if (nome.length() < 15 && shopping.length() < 30)
+	if (get_size("cinemas.dat") == 0)
 	{
-		fwrite(&cinema, sizeof(Cinema), 1, arquivo);
+		cout << "\n[NAO HA NENHUM REGISTRO NO ARQUIVO!]\n";
 	}
 	else
 	{
-		cout << "\n>> DIGITE CORRETAMENTE NOS PADROES! <<\n";
+		FILE *arquivo = fopen(arq, "r+b");
+		iffile.open("cinemas.dat", ios::binary | ios::in);
+		int id, linha;
+		Cinema cinema;
+		string nome, sala, shopping;
+
+		cout << "\nDigite o [ID] do cinema que queira editar: ";
+		cin >> id;
+
+		linha = 0;
+		char encontrou = 'F';
+
+		while (iffile.read((char *)&cinema, sizeof(cinema)) && encontrou == 'F')
+		{
+			// cout << "LINHA 1: " << linha;
+			// cout << "ID " << id;
+			if (id == linha)
+			{
+				// cout << "ENCONTROU SIM SEU MERDA";
+				encontrou = 'S';
+			}
+			linha += 1;
+			// cout << "LINHA 2: " << linha;
+		}
+
+		if (encontrou == 'F')
+		{
+			iffile.close();
+			fclose(arquivo);
+			cout << "\n [CINEMA NAO ENCONTRADO!] \n";
+		}
+
+		else 
+		{
+			iffile.close();
+			fseek(arquivo, id * sizeof(Cinema), SEEK_SET);
+
+			system("clear||cls");
+			fflush(stdin);
+
+			cout << "Digite o [NOME] do [CINEMA]: ";
+			getline(cin, nome);
+			strcpy(cinema.nome, nome.c_str());
+
+			cout << "Digite o [NOME] do [SHOPPING]: ";
+			getline(cin, shopping);
+			strcpy(cinema.shopping, shopping.c_str());
+
+			cout << "Digite a [SALA] do cinema: ";
+			cin >> cinema.qtsSalas;
+
+			cin.ignore();
+
+			if (nome.length() < 15 && shopping.length() < 30)
+			{
+				fwrite(&cinema, sizeof(Cinema), 1, arquivo);
+			}
+			else
+			{
+				cout << "\n>> DIGITE CORRETAMENTE NOS PADROES! <<\n";
+			}
+
+			fclose(arquivo);
+			readAll();
+		}
 	}
 
-	fclose(arquivo);
-	readAll();
 }
 
 void post()
@@ -106,7 +114,6 @@ void post()
 	FILE *arquivo = fopen(arq, "ab");
 	Cinema cinema;
 	string nome, sala, shopping;
-	char id;
 
 	do
 	{
@@ -144,82 +151,108 @@ void post()
 
 void readOne()
 {
-	FILE *arquivo = fopen(arq, "rb");
+	iffile.open("cinemas.dat", ios::binary | ios::in);
 
-	if (!arquivo)
+	if (!iffile)
 	{
-		arquivo = fopen(arq, "w+b");
+		cout << "\nO arquivo nao pode ser aberto!\n";
 	}
 
-	int id;
-	Cinema cinema;
-	cout << "\nColoque o [ID] do cinema que queira ler: ";
-	cin >> id;
+	else if (get_size("cinemas.dat") == 0)
+	{
+		cout << "\n[NAO HA NENHUM REGISTRO NO ARQUIVO!]\n";
+	}
 
-	fseek(arquivo, id * sizeof(Cinema), SEEK_SET);
-	fread(&cinema, sizeof(Cinema), 1, arquivo);
-	cout << "\n";
-	cout << "[CINEMA ENCONTRADO] :.    " << id << " " << cinema.nome << " " << cinema.shopping << " " << cinema.qtsSalas << endl;
+	else
+	{
+		int id, linha;
+		Cinema cinema;
+		cout << "\nColoque o [ID] do cinema que queira encontrar: ";
+		cin >> id;
+		linha = 0;
+		char encontrou = 'F';
 
-	fclose(arquivo);
-}
+		while (iffile.read((char *)&cinema, sizeof(cinema)) && encontrou == 'F')
+		{
+			if (id == linha)
+			{
+				cout << '\n';
+				cout << id /*<<" "<<cinema.id*/ << " " << cinema.nome << " " << cinema.shopping << " " << cinema.qtsSalas << endl;
+				cout << '\n';
+				encontrou = 'S';
+			}
+			linha += 1;
+		}
 
-int get_size(const char* file_name)
-{
-	FILE *file = fopen(file_name, "r");
+		if (encontrou == 'F')
+		{
+			cout << "\n [CINEMA NAO ENCONTRADO!] \n";
+		}
+	}
 
-	if(file == NULL)
-		return 0;
+	iffile.close();
+	// FILE *arquivo = fopen(arq, "rb");
 
-	fseek(file, 0, SEEK_END);
-	int size = ftell(file);
-	fclose(file);
+	// if (!arquivo)
+	// {
+	// 	arquivo = fopen(arq, "w+b");
+	// }
 
-	return size;
+	// int id;
+	// Cinema cinema;
+	// cout << "\nColoque o [ID] do cinema que queira ler: ";
+	// cin >> id;
+
+	// fseek(arquivo, id * sizeof(Cinema), SEEK_SET);
+	// fread(&cinema, sizeof(Cinema), 1, arquivo);
+	// cout << "\n";
+	// cout << "[CINEMA ENCONTRADO] :.    " << id << " " << cinema.nome << " " << cinema.shopping << " " << cinema.qtsSalas << endl;
+
+	// fclose(arquivo);
 }
 
 void readAll()
 {
-	FILE *arquivo = fopen(arq, "rb");
-
-	if (!arquivo)
+	if (get_size("cinemas.dat") == 0)
 	{
-		arquivo = fopen(arq, "w+b");
+		cout << "\n[NAO HA NENHUM REGISTRO NO ARQUIVO!]\n";
 	}
 
-	if(get_size("cinemas.dat") == 0)
+	else
 	{
-		cout << "vaziozao";
-	}
+		FILE *arquivo = fopen(arq, "rb");
 
-	else{
-		cout << "tem coiso";
-	}
+		if (!arquivo)
+		{
+			arquivo = fopen(arq, "w+b");
+		}
 
-	int id = 0;
-	Cinema cinema;
-	system("clear||cls");
-	fread(&cinema, sizeof(Cinema), 1, arquivo);
-
-	cout << ".: Leitura de [CINEMAS] :. \n\n";
-	cout << "CODIGO" << " | "
-		 << "NOME DO CINEMA"
-		 << " | "
-		 << "NOME DO SHOPPING"
-		 << " | "
-		 << "SALA\n"
-		 << endl;
-	do
-	{
-		// if (cinema.qtsSalas != -1)
-		//{
-		cout << id /*<<" "<<cinema.id*/ << " " << cinema.nome << " " << cinema.shopping << " " << cinema.qtsSalas << endl;
-		//}
+		int id = 0;
+		Cinema cinema;
+		system("clear||cls");
 		fread(&cinema, sizeof(Cinema), 1, arquivo);
-		id += 1;
-	} while (feof(arquivo) == 0);
-	fclose(arquivo);
-	cout << endl;
+
+		cout << ".: Leitura de [CINEMAS] :. \n\n";
+		cout << "CODIGO"
+			 << " | "
+			 << "NOME DO CINEMA"
+			 << " | "
+			 << "NOME DO SHOPPING"
+			 << " | "
+			 << "SALA\n"
+			 << endl;
+		do
+		{
+			// if (cinema.qtsSalas != -1)
+			//{
+			cout << id /*<<" "<<cinema.id*/ << " " << cinema.nome << " " << cinema.shopping << " " << cinema.qtsSalas << endl;
+			//}
+			fread(&cinema, sizeof(Cinema), 1, arquivo);
+			id += 1;
+		} while (feof(arquivo) == 0);
+		fclose(arquivo);
+		cout << endl;
+	}
 }
 
 void deleteOne()
@@ -227,30 +260,41 @@ void deleteOne()
 	iffile.open("cinemas.dat", ios::binary | ios::in);
 	offile.open("temp.dat", ios::binary | ios::out);
 
-	if (!offile || !offile)
+	if (!iffile || !offile)
 	{
 		cout << "O arquivo nao pode ser aberto!";
 	}
+
 	else
 	{
-		int id, linha;
-		Cinema cinema;
-		cout << "Coloque o [ID] do cinema que queira deletar: ";
-		cin >> id;
-		linha = 0;
-
-		while (iffile.read((char *)&cinema, sizeof(cinema)))
+		if (get_size("cinemas.dat") == 0)
 		{
-			if (id != linha)
-			{
-				offile.write((char *)&cinema, sizeof(cinema));
-			}
-			linha += 1;
+			cout << "\n[NAO HA NENHUM REGISTRO NO ARQUIVO!]\n";
+			iffile.close();
+			offile.close();
 		}
-		iffile.close();
-		offile.close();
-		remove("cinemas.dat");
-		rename("temp.dat", "cinemas.dat");
+
+		else
+		{
+			int id, linha;
+			Cinema cinema;
+			cout << "\nColoque o [ID] do cinema que queira deletar: ";
+			cin >> id;
+			linha = 0;
+
+			while (iffile.read((char *)&cinema, sizeof(cinema)))
+			{
+				if (id != linha)
+				{
+					offile.write((char *)&cinema, sizeof(cinema));
+				}
+				linha += 1;
+			}
+			iffile.close();
+			offile.close();
+			remove("cinemas.dat");
+			rename("temp.dat", "cinemas.dat");
+		}
 	}
 
 	// FILE *arquivo = fopen(arq, "r+b");
@@ -276,6 +320,4 @@ void deleteOne()
 	// 	remove("r+b");
 	// 	rename("tempt", "r+b");
 	// }
-
 }
-

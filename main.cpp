@@ -1,13 +1,13 @@
-#include "cinemas.h"
-#include <stdio.h>
-#include <string>
-using namespace std;
-
 /**
  * @author Nicoli (21689) e Danyelle (21232)
  * CRUD EM ARQUIVO BINÁRIO - CINEMAS
  * Professor: Maligno
  */
+
+#include "cinemas.h"
+#include <stdio.h>
+#include <string>
+using namespace std;
 
 int main() {
   char opcao;

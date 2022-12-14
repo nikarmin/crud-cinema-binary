@@ -13,7 +13,8 @@ Cinema::~Cinema() {}
 
 void Cinema::setNome(string nome) { strcpy(this->info.nome, nome.c_str()); }
 
-void Cinema::setShopping(string shopping) {
+void Cinema::setShopping(string shopping)
+{
   strcpy(this->info.shopping, shopping.c_str());
 }
 

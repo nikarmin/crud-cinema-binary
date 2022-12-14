@@ -12,7 +12,8 @@
 #include <string>
 using namespace std;
 
-class Cinemas {
+class Cinemas
+{
 private:
   // Arquivos para leitura/escrita
   const char *arq = "cinemas.dat";

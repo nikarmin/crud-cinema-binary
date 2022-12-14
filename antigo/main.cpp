@@ -7,7 +7,7 @@ using namespace std;
  * @author Nicoli (21689) e Danyelle (21232)
  * CRUD - CINEMAS
  * Professor: Maligno
-*/
+ */
 
 int main()
 {
@@ -54,7 +54,8 @@ int main()
          break;
       }
 
-      if (sair == 'N'){
+      if (sair == 'N')
+      {
          cout << "\nDeseja continuar? (S/N) ";
          cin >> continuar;
       }

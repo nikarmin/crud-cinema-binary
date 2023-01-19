@@ -9,11 +9,9 @@
 #include <string>
 using namespace std;
 
-class Cinema
-{
+class Cinema {
 private:
-  struct Info
-  {
+  struct Info {
     int id;
     char nome[15];
     char shopping[30];

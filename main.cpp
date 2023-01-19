@@ -9,14 +9,12 @@
 #include <string>
 using namespace std;
 
-int main()
-{
+int main() {
   char opcao;
   char sair = 'N';
   Cinemas cinemas;
 
-  do
-  {
+  do {
     system("clear||cls");
     cout << "=-=-=- C.R.U.D DE CINEMAS =-=-=-\n\n";
     cout << "[1] - Exibir um cinema\n";
@@ -29,8 +27,7 @@ int main()
     cout << "Digite uma opcao... ";
     cin >> opcao;
 
-    switch (opcao)
-    {
+    switch (opcao) {
     default:
       cout << "\nDigite corretamente uma opcao!\n";
       break;
@@ -54,8 +51,7 @@ int main()
       break;
     }
 
-    if (sair == 'N')
-    {
+    if (sair == 'N') {
       cout << "\nDeseja continuar? (S/N) ";
       cin >> cinemas.continuar;
     }
